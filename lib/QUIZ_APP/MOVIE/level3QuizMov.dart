@@ -1,32 +1,32 @@
-import 'package:firebasenew/QUIZ_APP/home.dart';
+import 'package:firebasenew/QUIZ_APP/MOVIE/level3PageMov.dart';
+import 'package:firebasenew/QUIZ_APP/SPORTS/level3page.dart';
 import 'package:flutter/material.dart';
 
-class MovieQuizPage extends StatefulWidget {
+class Level3MoviePage extends StatefulWidget {
   @override
-  _MovieQuizPage createState() => _MovieQuizPage();
+  _Level3MoviePageState createState() => _Level3MoviePageState();
 }
 
-class _MovieQuizPage extends State<MovieQuizPage> {
+class _Level3MoviePageState extends State<Level3MoviePage> {
   int currentQuestionIndex = 0;
   String selectedAnswer = "";
-  int score = 0;//
+  int score = 0;
 
-  // List of questions and answers
   final List<Map<String, dynamic>> questions = [
     {
-      "question": "Who is the director of Empuran ?",
-      "options": ["Lal Jose", "Khalid Rahman", "Prithwi Raj", "Lijo Jose Palliseri"],
-      "correct": "Prithwi Raj"
+      "question": "Which legendary Malayalam director is known as the 'Father of Malayalam Cinema'?",
+      "options": ["Adoor Gopalakrishnan", "J.C. Daniel", "Ramu Kariat", "Padmarajan"],
+      "correct": "J.C. Daniel"
     },
     {
-      "question": "Which is the first move directed by Mohan Lal?",
-      "options": ["Arattu", "Odiyan", "Barroz", "Ittimani"],
-      "correct": "Barroz"
+      "question": "Which 2018 Malayalam movie won the Best Feature Film award at the National Film Awards?",
+      "options": ["Sudani from Nigeria", "Ee.Ma.Yau", "Thondimuthalum Driksakshiyum", "Ayyappanum Koshiyum"],
+      "correct": "Sudani from Nigeria"
     },
     {
-      "question": "What is the character name of Mammootty in the movie Big B?",
-      "options": ["Sulaiman", "Bilal", "Koshi", "Sudakaran"],
-      "correct": "Bilal"
+      "question": "Which was the first Malayalam film to collect over ₹200 crores at the box office?",
+      "options": ["Drishyam", "Pulimurugan", "Lucifer", "Kayamkulam Kochunni"],
+      "correct": "Pulimurugan"
     },
   ];
 
@@ -35,10 +35,9 @@ class _MovieQuizPage extends State<MovieQuizPage> {
   void selectAnswer(String answer) {
     setState(() {
       selectedAnswer = answer;
-      selectedAnswersMap[currentQuestionIndex] = answer; // Store answer for the question
+      selectedAnswersMap[currentQuestionIndex] = answer;
     });
   }
-
   void nextQuestion() {
     if (selectedAnswer.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,11 +52,26 @@ class _MovieQuizPage extends State<MovieQuizPage> {
 
     if (currentQuestionIndex < questions.length - 1) {
       setState(() {
-        currentQuestionIndex++; // Move forward
-        selectedAnswer = selectedAnswersMap[currentQuestionIndex + 1] ?? ""; // Restore selection if available
+        currentQuestionIndex++;
+        selectedAnswer = selectedAnswersMap[currentQuestionIndex] ?? "";
       });
     } else {
       calculateScore();
+
+      final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>? ?? {};
+      int level1Score = arguments["level1Score"] ?? 0;
+      int level2Score = arguments["level2Score"] ?? 0;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Level3CompletionScreenMov(
+            level1Score: level1Score,
+            level2Score: level2Score,
+            level3Score: score,
+          ),
+        ),
+      );
     }
   }
 
@@ -69,6 +83,8 @@ class _MovieQuizPage extends State<MovieQuizPage> {
       });
     }
   }
+
+
 
   void calculateScore() {
     int totalScore = 0;
@@ -82,27 +98,32 @@ class _MovieQuizPage extends State<MovieQuizPage> {
       score = totalScore;
     });
 
-    showResultDialog(); //
+    showFinalResultDialog();
   }
 
-  void showResultDialog() {
+  void showFinalResultDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Quiz Completed!"),
-          content: Text("Your total score is $score/${questions.length}."),
+          content: Text("Your total score for Level 3 is $score/${questions.length}."),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close dialog
-                resetQuiz(); // Restart quiz
+                Navigator.pop(context);
+                resetQuiz();
               },
               child: Text("Restart"),
             ),
-            TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>QuizHome(email: '')));
-            }, child: Text("Go to Home"))
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context); // Go back to home
+              },
+              child: Text("Go to Home"),
+            ),
           ],
         );
       },
@@ -125,10 +146,9 @@ class _MovieQuizPage extends State<MovieQuizPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Movie Quiz"),
+        title: Text("Movie Quiz - Level 3"),
       ),
-      body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("Assets/images/movie2.jpg"),fit: BoxFit.fill)),
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +158,6 @@ class _MovieQuizPage extends State<MovieQuizPage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
-
             ...currentQuestion["options"].map<Widget>((option) {
               bool isSelected = selectedAnswer == option;
               return Padding(
@@ -151,18 +170,12 @@ class _MovieQuizPage extends State<MovieQuizPage> {
                   onPressed: () => selectAnswer(option),
                   child: Text(
                     option,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.white : Colors.black,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.black),
                   ),
                 ),
               );
             }).toList(),
-
             SizedBox(height: 30),
-
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -176,17 +189,10 @@ class _MovieQuizPage extends State<MovieQuizPage> {
                     child: Text("Previous", style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                   SizedBox(width: 30),
-
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    ),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                     onPressed: nextQuestion,
-                    child: Text(
-                      currentQuestionIndex < questions.length - 1 ? "Next" : "Finish",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                    child: Text(currentQuestionIndex < questions.length - 1 ? "Next" : "Finish", style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                 ],
               ),

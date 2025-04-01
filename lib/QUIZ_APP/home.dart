@@ -1,6 +1,6 @@
-import 'package:firebasenew/QUIZ_APP/GK/gkpage1.dart';
-import 'package:firebasenew/QUIZ_APP/MOVIE/moviepage1.dart';
-import 'package:firebasenew/QUIZ_APP/POLITICS/level1Quiz.dart';
+import 'package:firebasenew/QUIZ_APP/GK/level1QuizGK.dart';
+import 'package:firebasenew/QUIZ_APP/MOVIE/level1QuizMov.dart';
+import 'package:firebasenew/QUIZ_APP/POLITICS/level1PoliQuiz.dart';
 import 'package:firebasenew/QUIZ_APP/SPORTS/level1Quiz.dart';
 import 'package:flutter/material.dart';
 

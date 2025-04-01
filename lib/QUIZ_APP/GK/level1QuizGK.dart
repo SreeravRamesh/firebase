@@ -1,32 +1,34 @@
+import 'package:firebasenew/QUIZ_APP/GK/level1PageGK.dart';
+import 'package:firebasenew/QUIZ_APP/SPORTS/level1page.dart';
 import 'package:firebasenew/QUIZ_APP/home.dart';
 import 'package:flutter/material.dart';
 
-class PoliticsQuizPage extends StatefulWidget {
+
+class GKQuizPage extends StatefulWidget {
   @override
-  _PoliticsQuizPage createState() => _PoliticsQuizPage();
+  _GKQuizPageState createState() => _GKQuizPageState();
 }
 
-class _PoliticsQuizPage extends State<PoliticsQuizPage> {
+class _GKQuizPageState extends State<GKQuizPage> {
   int currentQuestionIndex = 0;
   String selectedAnswer = "";
   int score = 0;
 
-  // List of questions and answers
   final List<Map<String, dynamic>> questions = [
     {
-      "question": "Who is the current prime minister of india?",
-      "options": ["Narendra Modi", "Rahul Gandhi", "Suresh Nagarkoti", "Raja Lakshmi"],
-      "correct": "Narendra Modi"
+      "question": "How many continents are there in the world?",
+      "options": ["5", "6", "7", "8"],
+      "correct": "7"
     },
     {
-      "question": "Who is the president of India",
-      "options": ["Narendra Modi", "Droupathi Murmu", "Rakesh Menon", "Vijitha Shenoy"],
-      "correct": "Droupathi Murmu"
+      "question": "Which is the largest planet in our solar system?",
+      "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+      "correct": "Jupiter"
     },
     {
-      "question": "Who is the chief minister of kerala?",
-      "options": ["Kodiyer Balakrishnan", "Suresh Gopi", "Umman Chandi", "Pinarayi Vijayan"],
-      "correct": "Pinarayi Vijayan"
+      "question": "Which is the national animal of India?",
+      "options": ["Elephant", "Lion", "Tiger", "Peacock"],
+      "correct": "Tiger"
     },
   ];
 
@@ -53,22 +55,29 @@ class _PoliticsQuizPage extends State<PoliticsQuizPage> {
 
     if (currentQuestionIndex < questions.length - 1) {
       setState(() {
-        currentQuestionIndex++; // Move forward
-        selectedAnswer = selectedAnswersMap[currentQuestionIndex + 1] ?? ""; // Restore selection if available
+        currentQuestionIndex++;
+        selectedAnswer = selectedAnswersMap[currentQuestionIndex] ?? "";
       });
     } else {
       calculateScore();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LevelCompletionScreenGK(score: score, totalQuestions: questions.length),
+        ),
+      );
     }
   }
 
   void previousQuestion() {
     if (currentQuestionIndex > 0) {
       setState(() {
-        currentQuestionIndex--; // Move back
-        selectedAnswer = selectedAnswersMap[currentQuestionIndex] ?? ""; // Restore selection
+        currentQuestionIndex--;
+        selectedAnswer = selectedAnswersMap[currentQuestionIndex] ?? "";
       });
     }
   }
+
 
   void calculateScore() {
     int totalScore = 0;
@@ -84,6 +93,7 @@ class _PoliticsQuizPage extends State<PoliticsQuizPage> {
 
     showResultDialog();
   }
+
 
   void showResultDialog() {
     showDialog(
@@ -109,6 +119,7 @@ class _PoliticsQuizPage extends State<PoliticsQuizPage> {
     );
   }
 
+
   void resetQuiz() {
     setState(() {
       currentQuestionIndex = 0;
@@ -125,10 +136,11 @@ class _PoliticsQuizPage extends State<PoliticsQuizPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Politics Quiz"),
+        title: Text("GK Quiz"),
       ),
-      body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("Assets/images/politics2.jpg"),fit: BoxFit.fill)),
+      body: Container(decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("Assets/images/quizGK.jpg"),fit: BoxFit.fill)),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +184,7 @@ class _PoliticsQuizPage extends State<PoliticsQuizPage> {
                       backgroundColor: currentQuestionIndex == 0 ? Colors.grey : Colors.blue,
                       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     ),
-                    onPressed: currentQuestionIndex == 0 ? null : previousQuestion, // Disabled if first question
+                    onPressed: currentQuestionIndex == 0 ? null : previousQuestion,
                     child: Text("Previous", style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                   SizedBox(width: 30),
